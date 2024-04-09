@@ -16,12 +16,17 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->get();
-        if($todos->isEmpty()){
-            return response()->json(["message"=>"No todo found"], 404);
+        try{
+
+            $todos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->get();
+            if($todos->isEmpty()){
+                return response()->json(["message"=>"No todo found"], 404);
+            }
+        
+            return response()->json(["message" => "Todos fetched!", "todos"=> $todos], 200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while Fetching the todo", "error" => $e->getMessage()], 500);
         }
-    
-        return response()->json(["message" => "Todos fetched!", "todos"=> $todos], 200);
     }
     
     /**
@@ -31,25 +36,29 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+        try{
 
-        if(!Auth::id()){
-            return response()->json(["message"=> "User is not authenticated"], 401);
+            if(!Auth::id()){
+                return response()->json(["message"=> "User is not authenticated"], 401);
+            }
+            // validating data 
+            $request->validate([
+                "todo" => "required|string|min:4"
+            ]);
+    
+            $todo = Todo::create([
+                'user_id' => $request->user_id,
+                'todo' => $request->todo,
+            ]);
+    
+            if($todo){
+                return response()->json(["message" => "Todo created successful!"],201);
+            }  
+    
+            return response()->json(["message"=> "Something went wrong, Please try again", 400]);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while creating the todo", "error" => $e->getMessage()], 500);
         }
-        // validating data 
-        $request->validate([
-            "todo" => "required|string|min:4"
-        ]);
-
-        $todo = Todo::create([
-            'user_id' => $request->user_id,
-            'todo' => $request->todo,
-        ]);
-
-        if($todo){
-            return response()->json(["message" => "Todo created successful!"],201);
-        }  
-
-        return response()->json(["message"=> "Something went wrong, Please try again", 400]);
 
     }
 
@@ -63,13 +72,18 @@ class TodoController extends Controller
      */
     public function show($id)
     {
-        $todo = Todo::find($id);
-
-        if($todo->user_id != Auth::id()){
-            return response()->json(["message" => "Unauthorized to view the todo"], 401);
+        try{
+            
+            $todo = Todo::find($id);
+    
+            if($todo->user_id != Auth::id()){
+                return response()->json(["message" => "Unauthorized to view the todo"], 401);
+            }
+    
+            return response()->json(["message" => "Todo fetched", "todo" => $todo], 200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while fetching the todo", "error" => $e->getMessage()], 500);
         }
-
-        return response()->json(["message" => "Todo fetched", "todo" => $todo], 200);
     }
 
 
@@ -82,20 +96,25 @@ class TodoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $todo = Todo::find($id);
+        try{
 
-        if(!$todo){
-            return response()->json(["message"=> "No todo found!"], 404);
+            $todo = Todo::find($id);
+    
+            if(!$todo){
+                return response()->json(["message"=> "No todo found!"], 404);
+            }
+    
+            if($todo->user_id != Auth::id()){
+                return response()->json(["message" => "Unauthorized to update the todo"], 401);
+            }
+    
+            $data = $request->validate(['todo'=> 'string|required']);
+            $todo->update($data);
+    
+            return response()->json(["message" => "Todo updated successful!"], 200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while updating the todo", "error" => $e->getMessage()], 500);
         }
-
-        if($todo->user_id != Auth::id()){
-            return response()->json(["message" => "Unauthorized to update the todo"], 401);
-        }
-
-        $data = $request->validate(['todo'=> 'string|required']);
-        $todo->update($data);
-
-        return response()->json(["message" => "Todo updated successful!"], 200);
     }
 
 
@@ -107,17 +126,22 @@ class TodoController extends Controller
      */
 
      public function changeStatus($id){
-        $todo = Todo::find($id);
+        try{
 
-        if(!$todo){
-            return response()->json(["message"=> "Todo not found"], 404);
+            $todo = Todo::find($id);
+    
+            if(!$todo){
+                return response()->json(["message"=> "Todo not found"], 404);
+            }
+    
+            $todo->is_finished = !$todo->is_finished;
+            $status = $todo->is_finished ? "Completed" : "Pending";
+            $todo->save();
+    
+            return response()->json(["message" => "Todo marked as ".$status], 200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while changing the todo status", "error" => $e->getMessage()], 500);
         }
-
-        $todo->is_finished = !$todo->is_finished;
-        $status = $todo->is_finished ? "Completed" : "Pending";
-        $todo->save();
-
-        return response()->json(["message" => "Todo marked as ".$status], 200);
      }
 
      /**
@@ -128,8 +152,13 @@ class TodoController extends Controller
      */
 
      public function completedTodos(){
-        $completedTodos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->where("is_finished", true)->get();
-        return response()->json(["message" => "Completed todos fetched!", "todos" => $completedTodos],200);
+        try{
+
+            $completedTodos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->where("is_finished", true)->get();
+            return response()->json(["message" => "Completed todos fetched!", "todos" => $completedTodos],200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while fetching completed todos", "error" => $e->getMessage()], 500);
+        }
      }
 
     /**
@@ -140,16 +169,21 @@ class TodoController extends Controller
      */
     public function destroy($id)
     {
-        $todo = Todo::find($id);
-        if(!$todo){
-            return response()->json(["message"=> "Todo not found"], 404);
-        }
+        try{
 
-        if(Auth::id() != $todo->user_id){
-            return response()->json(["message" => "Unauthorized to delete the todo"], 401);
+            $todo = Todo::find($id);
+            if(!$todo){
+                return response()->json(["message"=> "Todo not found"], 404);
+            }
+    
+            if(Auth::id() != $todo->user_id){
+                return response()->json(["message" => "Unauthorized to delete the todo"], 401);
+            }
+    
+            $todo->delete();
+            return response()->json(["message" => "Todo deleted successful!"], 200);
+        }catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred while deleting the todo", "error" => $e->getMessage()], 500);
         }
-
-        $todo->delete();
-        return response()->json(["message" => "Todo deleted successful!"], 200);
     }
 }
