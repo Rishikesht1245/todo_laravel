@@ -31,6 +31,10 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+
+        if(!Auth::id()){
+            return response()->json(["message"=> "User is not authenticated"], 401);
+        }
         // validating data 
         $request->validate([
             "todo" => "required|string|min:4"
@@ -102,17 +106,30 @@ class TodoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function markCompleted($id){
+     public function changeStatus($id){
         $todo = Todo::find($id);
 
         if(!$todo){
             return response()->json(["message"=> "Todo not found"], 404);
         }
 
-        $todo->is_finished = true;
+        $todo->is_finished = !$todo->is_finished;
+        $status = $todo->is_finished ? "Completed" : "Pending";
         $todo->save();
 
-        return response()->json(["message" => "Todo marked as finished"], 200);
+        return response()->json(["message" => "Todo marked as ".$status], 200);
+     }
+
+     /**
+     * View all completed todos.
+     *
+     * @param 
+     * @return \Illuminate\Http\Response
+     */
+
+     public function completedTodos(){
+        $completedTodos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->where("is_finished", true)->get();
+        return response()->json(["message" => "Completed todos fetched!", "todos" => $completedTodos],200);
      }
 
     /**
@@ -121,8 +138,18 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Todo $todo)
+    public function destroy($id)
     {
-        //
+        $todo = Todo::find($id);
+        if(!$todo){
+            return response()->json(["message"=> "Todo not found"], 404);
+        }
+
+        if(Auth::id() != $todo->user_id){
+            return response()->json(["message" => "Unauthorized to delete the todo"], 401);
+        }
+
+        $todo->delete();
+        return response()->json(["message" => "Todo deleted successful!"], 200);
     }
 }

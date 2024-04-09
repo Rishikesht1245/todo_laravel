@@ -29,6 +29,8 @@ Route::namespace("Auth")->group(function(){
 Route::prefix("/todo")->group(function(){
     // view all todo
     Route::get("/all", "TodoController@index");
+    // View all completed todos
+    Route::get("/completed", "TodoController@completedTodos");
     // create todo
     Route::post("/create", "TodoController@store");
     // view single todo
@@ -36,7 +38,11 @@ Route::prefix("/todo")->group(function(){
     // update todo
     Route::put("/{id}", "TodoController@update");
     // Mark status completed
-    Route::patch("/{id}", "TodoController@markCompleted");
+    Route::patch("/{id}", "TodoController@changeStatus");
+    // Delete the todo
+    Route::delete("/{id}", "TodoController@destroy");
+
+
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
