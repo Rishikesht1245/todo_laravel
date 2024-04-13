@@ -2,3 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base{
+    h1{
+    @apply md:text-[60px] text-[48px]
+    }
+    h2{
+        @apply md:text-[48px] text-[36px]
+    }
+    h3{
+        @apply md:text-[36px] text-[24px]
+    }
+    h4{
+        @apply md:text-[24px] text-[18px] font-semibold tracking-widest
+    }
+    h5{
+        @apply md:text-[18px] font-semibold tracking-wider
+    }
+
+    h6{
+        @apply md:text-[14px] text-[12px] font-bold
+    }
+    
+}
+
+
+/* colors */
+.text-indigo{
+    @apply bg-gradient-to-r from-cyan-400 to-blue-600 text-transparent bg-clip-text
+}
+
+
+/* Typography */
+.heading-4{
+    @apply md:text-[24px] text-[18px] font-semibold tracking-widest
+}
+
+.heading-5{
+    @apply md:text-[18px] font-semibold tracking-wider
+}
+
+.parent-container {
+    @apply w-full p-3 lg:p-8
+}
+
+.footer-container{
+    @apply w-full p-[1px]
+}
+
+.flex-between{
+    @apply justify-between items-center;
+}
+
+.flex-center{
+    @apply justify-center items-center;
+}
+
+
