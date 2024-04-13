@@ -13,7 +13,7 @@ const HomePage = () => {
   },[dispatch]);
 
   return (
-    <div>HomePage</div>
+    <div className="parent-container">HomePage</div>
   )
 }
 

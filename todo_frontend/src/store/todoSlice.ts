@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TodoAPI } from "../config/api";
-import axios from "axios";
 
 interface InitialState {
     isLoading : boolean;
@@ -55,12 +54,11 @@ const TodoSlice = createSlice({
 
 export const fetchTodosByUserID = createAsyncThunk<ITodo[]>("todos/fetchByUserID", async () => {
     try {
-        const response = await axios.get("http://localhost:8000/api/test");
-        console.log(response, "===response")
+        const response = await TodoAPI.get("/all");
         return response.data.todos;
-    } catch (error) {
-        console.log(error);
-        throw error;
+    } catch (error : any) {
+        console.log(error, "===error");
+        return error?.response?.message || "Something went wrong!"
     }
 });
 export default TodoSlice.reducer;

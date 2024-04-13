@@ -5,7 +5,7 @@ import Footer from './Footer'
 
 const HomeLayout = () => {
   return (
-    <div className='flex flex-col justify-between w-full min-h-[100vh]'>
+    <div className='flex flex-col flex-between min-h-[100vh]'>
       <Header/>
       <Outlet/>
       <Footer/>
