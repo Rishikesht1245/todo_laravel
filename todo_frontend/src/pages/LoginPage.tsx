@@ -3,14 +3,15 @@ import { useAppDispatch } from "../App";
 import { LoginAPI } from "../apiRoutes/api"
 import LoginForm from "../components/LoginForm";
 import { login } from "../store/authSlice";
+import {  IUser } from "../interfaces/auth";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   // after successful login save the state locally and navigate to home page
-  const loginHandler = () => {
-    dispatch(login());
+  const loginHandler = (user:IUser) => {
+    dispatch(login(user));
     navigate("/");
   }
   return (

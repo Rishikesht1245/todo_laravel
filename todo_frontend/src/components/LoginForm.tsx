@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { loginSchema } from "../schema/authSchema";
-import { ILogin, ILoginResponse } from "../interfaces/auth";
+import { ILogin, ILoginResponse, IUser } from "../interfaces/auth";
 import Input from "./Input";
 import Button from "./Button";
 import { toast } from "react-hot-toast";
@@ -18,7 +18,7 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
       onSubmit(values)
         .then((response: ILoginResponse) => {
           toast.success(response?.data?.message);
-          loginHandler();
+          loginHandler(response?.data?.user);
         })
         .catch(({ response: { data } }: { response: { data: any } }) => {
           setErrorMessage(data?.message || "Something went wrong");
@@ -71,7 +71,7 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
 };
 
 interface LoginFormProps {
-  loginHandler: () => void;
+  loginHandler: (user: IUser) => void;
   onSubmit: (formData: ILogin) => any;
 }
 

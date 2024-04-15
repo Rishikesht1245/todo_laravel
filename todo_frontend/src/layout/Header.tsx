@@ -3,10 +3,11 @@ import { todoLogo } from '../assets/image'
 import { useAppDispatch, useAppSelector } from '../App'
 import { Link } from 'react-router-dom';
 import { logout } from '../store/authSlice';
+import { getLocalData } from '../utils/localstorage';
 
 const Header = () => {
 
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const isAuth = useAppSelector((state) => state.auth.isAuth) || getLocalData("isAuth");
   const dispatch = useAppDispatch();
   return (
     <div className='parent-container flex flex-between h-[80px] bg-[#0f1c31] fixed top-0'>

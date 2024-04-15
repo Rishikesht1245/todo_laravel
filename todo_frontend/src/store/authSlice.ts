@@ -1,18 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { removeLocalData, saveLocally } from "../utils/localstorage";
+import { IUser } from "../interfaces/auth";
 
 
-const initialState : {isAuth : boolean} = {isAuth : false};
+const initialState : {isAuth : boolean, user:IUser | null} = {isAuth : false, user:null};
 const AuthSlice = createSlice({
     name : "Auth",
     initialState,
     reducers :{
-        login : (state) => {
+        login : (state,action) => {
             state.isAuth = true;
-            localStorage.setItem("isAuth", "true")
+            state.user = action.payload
+            saveLocally("isAuth", true);
+            saveLocally("user", action.payload)
         },
         logout: (state) => {
             state.isAuth = false;
-            localStorage.removeItem("isAuth")
+            state.user = null;
+            removeLocalData();
         }
     }
 });
