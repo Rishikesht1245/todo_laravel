@@ -11,10 +11,10 @@
         @apply md:text-[48px] text-[36px]
     }
     h3{
-        @apply md:text-[36px] text-[24px]
+        @apply md:text-[32px] text-[24px] font-bold tracking-wider
     }
     h4{
-        @apply md:text-[24px] text-[18px] font-semibold tracking-widest
+        @apply md:text-[24px] text-[18px] font-semibold tracking-wider
     }
     h5{
         @apply md:text-[18px] font-semibold tracking-wider
@@ -30,6 +30,10 @@
 /* colors */
 .text-indigo{
     @apply bg-gradient-to-r from-cyan-400 to-blue-600 text-transparent bg-clip-text
+}
+
+.text-label{
+    @apply text-gray-500 tracking-wider font-semibold text-[16px]
 }
 
 
@@ -48,6 +52,10 @@
 
 .footer-container{
     @apply w-full p-[1px]
+}
+
+.form-container{
+    @apply max-w-[600px] w-[90vw] sm:w-[480px] lg:w-[540px]  bg-white shadow-lg border rounded-sm p-5 sm:p-10 flex flex-col gap-5
 }
 
 .flex-between{
