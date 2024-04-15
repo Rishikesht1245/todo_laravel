@@ -9,7 +9,7 @@ const Header = () => {
   const isAuth = useAppSelector((state) => state.auth.isAuth);
   const dispatch = useAppDispatch();
   return (
-    <div className='parent-container flex flex-between h-[80px] bg-[#0f1c31]'>
+    <div className='parent-container flex flex-between h-[80px] bg-[#0f1c31] fixed top-0'>
       <div className="flex flex-center gap-5">
         <img src={todoLogo.src} alt={todoLogo.alt} width={38} height={38}/>
         <h4 className='text-indigo'>TO-DO</h4>

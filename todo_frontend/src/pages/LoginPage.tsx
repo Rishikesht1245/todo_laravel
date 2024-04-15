@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../App";
 import { LoginAPI } from "../apiRoutes/api"
 import LoginForm from "../components/LoginForm";
-import { ILogin } from "../interfaces/auth"
 import { login } from "../store/authSlice";
 
 const LoginPage = () => {
@@ -15,7 +14,7 @@ const LoginPage = () => {
     navigate("/");
   }
   return (
-    <div>
+    <div className="my-10">
       <LoginForm loginHandler={loginHandler} onSubmit={LoginAPI}/>
     </div>
   )

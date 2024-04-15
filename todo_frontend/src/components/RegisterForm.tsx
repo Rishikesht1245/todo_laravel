@@ -1,22 +1,25 @@
 import { useFormik } from "formik";
-import { loginSchema } from "../schema/authSchema";
-import { ILogin, ILoginResponse } from "../interfaces/auth";
+import { registerSchema } from "../schema/authSchema";
+import { IRegister } from "../interfaces/auth";
 import Input from "./Input";
 import Button from "./Button";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
+
+const RegisterForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
-    validationSchema: loginSchema,
+    validationSchema: registerSchema,
     onSubmit: (values) => {
       onSubmit(values)
-        .then((response: ILoginResponse) => {
+        .then((response: any) => {
           toast.success(response?.data?.message);
           loginHandler();
         })
@@ -27,8 +30,18 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
   });
   return (
     <div className="form-container">
-      <h3 className="text-indigo uppercase text-center">Welcome User</h3>
+      <h3 className="text-indigo uppercase text-center">Create Your Account</h3>
       <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
+        <Input
+          name="name"
+          type="name"
+          label="Name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          error={formik.errors.name}
+          touched={formik.touched.name}
+        />
         <Input
           name="email"
           type="email"
@@ -50,11 +63,21 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
           error={formik.errors.password}
           touched={formik.touched.password}
         />
+        <Input
+          name="confirmPassword"
+          type="password"
+          label="Confirm Password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.confirmPassword}
+          error={formik.errors.confirmPassword}
+          touched={formik.touched.confirmPassword}
+        />
         <Button
           type="submit"
           className="bg-cyan-500 mt-5 uppercase tracking-wider"
         >
-          Login
+          Register
         </Button>
       </form>
       {errorMessage && (
@@ -64,15 +87,15 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
       )}
 
       <span className="text-indigo text-sm font-semibold text-right">
-        <Link to={"/register"}>New user ? Register here.</Link>
+        <Link to={"/login"}>Already have an account ? Login</Link>
       </span>
     </div>
   );
 };
 
 interface LoginFormProps {
-  loginHandler: () => void;
-  onSubmit: (formData: ILogin) => any;
+  onSubmit: (formData: IRegister) => any;
+  loginHandler: () => any;
 }
 
-export default LoginForm;
+export default RegisterForm;

@@ -25,7 +25,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        placeholder={`Enter your ${name}...`}
+        placeholder={`${name == "confirmPassword" ? "Renter" : "Enter"} your ${name == "confirmPassword" ? "password" : name}`}
         className={`${className} w-full border border-gray-100 p-3 focus:outline-cyan-300 rounded-md shadow-sm`}
       />
       {touched && error ? (
