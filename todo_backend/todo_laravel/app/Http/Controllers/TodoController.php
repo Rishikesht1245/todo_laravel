@@ -14,11 +14,11 @@ class TodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($userId)
     {
         try{
 
-            $todos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->get();
+            $todos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id()|| $userId)->get();
             if($todos->isEmpty()){
                 return response()->json(["message"=>"No todo found"], 404);
             }

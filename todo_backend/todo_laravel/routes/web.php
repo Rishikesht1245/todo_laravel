@@ -28,7 +28,7 @@ Route::prefix('/api')->group(function () {
 
     // Todo CRUD operations
     Route::prefix('/todo')->group(function () {
-        Route::get('/all', 'TodoController@index');
+        Route::get('/all/{id}', 'TodoController@index');
         Route::get('/completed', 'TodoController@completedTodos');
         Route::post('/create', 'TodoController@store');
         Route::get('/{id}', 'TodoController@show');
