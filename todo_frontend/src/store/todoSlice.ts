@@ -52,9 +52,9 @@ const TodoSlice = createSlice({
     
 });
 
-export const fetchTodosByUserID = createAsyncThunk<ITodo[]>("todos/fetchByUserID", async () => {
+export const fetchTodosByUserID = createAsyncThunk<ITodo[], string>("todos/fetchByUserID", async (userID) => {
     try {
-        const response = await TodoAPI.get("/all");
+        const response = await TodoAPI.get(`/all/${userID}`);
         return response.data.todos;
     } catch (error : any) {
         console.log(error, "===error");

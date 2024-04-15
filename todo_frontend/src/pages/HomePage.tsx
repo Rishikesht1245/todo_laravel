@@ -1,20 +1,33 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react";
 import { fetchTodosByUserID } from "../store/todoSlice";
 import { useAppDispatch, useAppSelector } from "../App";
+import { getUserID } from "../utils/localstorage";
+import Loader from "../components/Loader";
+
 const HomePage = () => {
-
-  const todos = useAppSelector((state) => state.todo.data)
+  const { data, isLoading } = useAppSelector((state) => state.todo);
   const dispatch = useAppDispatch();
-
-  console.log(todos, "===todos")
+  const userId = useAppSelector((state) => state?.auth?.user?.id) || getUserID();
 
   useEffect(() => {
-    dispatch(fetchTodosByUserID());
-  },[dispatch]);
+    dispatch(fetchTodosByUserID(userId));
+  }, [dispatch, userId]);
 
   return (
-    <div className="parent-container">HomePage</div>
-  )
-}
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : data && data.length > 0 ? (
+        <div>
+          {data.map((todo) => (
+            <h1>{todo.todo}</h1>
+          ))}
+        </div>
+      ) : (
+        <div>No todos found</div>
+      )}
+    </>
+  );
+};
 
-export default HomePage
+export default HomePage;
