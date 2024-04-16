@@ -19,9 +19,9 @@ class TodoController extends Controller
     {
         try{
 
-            $todos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id()|| $userId)->get();
+            $todos = Todo::orderBy("created_at", "desc")->where("user_id", $userId)->get();
             if($todos->isEmpty()){
-                return response()->json(["message"=>"No todo found"], 404);
+                return response()->json(["message"=>"No todo found", "todos"=> []], 404);
             }
         
             return response()->json(["message" => "Todos fetched!", "todos"=> $todos], 200);

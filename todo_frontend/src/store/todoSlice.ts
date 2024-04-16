@@ -58,7 +58,7 @@ export const fetchTodosByUserID = createAsyncThunk<ITodo[], string>("todos/fetch
         return response.data.todos;
     } catch (error : any) {
         console.log(error, "===error");
-        return error?.response?.message || "Something went wrong!"
+        return error?.response?.data.todos || "Something went wrong!"
     }
 });
 export default TodoSlice.reducer;

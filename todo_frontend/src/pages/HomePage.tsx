@@ -21,6 +21,7 @@ const HomePage = () => {
   const userId =
     useAppSelector((state) => state?.auth?.user?.id) || getUserID();
 
+
   useEffect(() => {
     dispatch(fetchTodosByUserID(userId));
   }, [dispatch, userId]);
@@ -61,7 +62,7 @@ const HomePage = () => {
             </Button>
           </div>
           {data && data.length > 0 ? (
-            data.map((todo, index) => (
+            data?.map((todo, index) => (
               <TodoCard
                 todo={todo}
                 key={todo?.id}
@@ -70,7 +71,9 @@ const HomePage = () => {
               />
             ))
           ) : (
-            <div>No todos found</div>
+            <div>
+              <h5 className="text-center">No Todos Found.</h5>
+            </div>
           )}
           <Modal
             isOpen={modalOpen}

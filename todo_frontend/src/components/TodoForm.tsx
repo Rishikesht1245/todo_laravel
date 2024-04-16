@@ -7,13 +7,13 @@ import { todoSchema } from "../schema/todoSchema";
 import Input from "./Input";
 import Button from "./Button";
 import { getUserID } from "../utils/helpers";
-import { useAppDispatch } from "../App";
+import { useAppDispatch, useAppSelector } from "../App";
 import { fetchTodosByUserID } from "../store/todoSlice";
 const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
 
     const [errorMessage, setErrorMessage] = useState<string>("");
     const dispatch = useAppDispatch();
-    const user_id = getUserID();
+    const userId =useAppSelector((state) => state?.auth?.user?.id) || getUserID();
 
     const handleSubmit = async (values : {
         todo: string;
@@ -23,7 +23,7 @@ const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
             try {
                 const response = await createTodoAPI(values);
                 toast.success(response?.data?.message);
-                dispatch(fetchTodosByUserID(user_id))
+                dispatch(fetchTodosByUserID(userId))
                 setModalOpen(false);
                 
             } catch (error) {
@@ -45,7 +45,7 @@ const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
 
   const formik = useFormik({
     initialValues: {
-     user_id : user_id,
+     user_id : userId,
      todo : ""
     },
     validationSchema: todoSchema,
