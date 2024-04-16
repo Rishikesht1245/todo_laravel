@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { removeLocalData, saveLocally } from "../utils/localstorage";
+import { removeLocalData, saveLocally } from "../utils/helpers";
 import { IUser } from "../interfaces/auth";
 
 

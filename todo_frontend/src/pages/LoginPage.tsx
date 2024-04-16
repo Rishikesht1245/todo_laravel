@@ -4,6 +4,7 @@ import { LoginAPI } from "../apiRoutes/api"
 import LoginForm from "../components/LoginForm";
 import { login } from "../store/authSlice";
 import {  IUser } from "../interfaces/auth";
+import { fetchAndSaveCSRFToken } from "../utils/helpers";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -12,6 +13,7 @@ const LoginPage = () => {
   // after successful login save the state locally and navigate to home page
   const loginHandler = (user:IUser) => {
     dispatch(login(user));
+    fetchAndSaveCSRFToken();
     navigate("/");
   }
   return (

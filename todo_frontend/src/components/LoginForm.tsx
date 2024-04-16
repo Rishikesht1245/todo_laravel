@@ -14,7 +14,8 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
       password: "",
     },
     validationSchema: loginSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, {setSubmitting}) => {
+      setSubmitting(true);
       onSubmit(values)
         .then((response: ILoginResponse) => {
           toast.success(response?.data?.message);
@@ -22,7 +23,7 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
         })
         .catch(({ response: { data } }: { response: { data: any } }) => {
           setErrorMessage(data?.message || "Something went wrong");
-        });
+        }).finally(() => setSubmitting(false));
     },
   });
   return (
@@ -54,7 +55,7 @@ const LoginForm = ({ onSubmit, loginHandler }: LoginFormProps) => {
           type="submit"
           className="bg-cyan-500 mt-5 uppercase tracking-wider"
         >
-          Login
+          {formik.isSubmitting ? "Logging..." : "Login"} 
         </Button>
       </form>
       {errorMessage && (

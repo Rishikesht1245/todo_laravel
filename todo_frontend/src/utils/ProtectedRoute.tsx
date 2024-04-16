@@ -1,6 +1,6 @@
 import { useAppSelector } from "../App";
 import { Navigate, Outlet } from "react-router-dom";
-import { getLocalData } from "./localstorage";
+import { getLocalData } from "./helpers";
 
 const ProtectedRoute = () => {
   const isAuth = useAppSelector((state) => state.auth.isAuth) || getLocalData("isAuth");
