@@ -21,7 +21,7 @@
     }
 
     h6{
-        @apply md:text-[14px] text-[12px] font-bold
+        @apply md:text-[16px] text-[12px] font-bold
     }
     
 }
@@ -56,6 +56,10 @@
 
 .form-container{
     @apply max-w-[600px] w-[90vw] sm:w-[480px] lg:w-[540px]  bg-white shadow-lg border rounded-sm p-5 sm:p-10 flex flex-col gap-5
+}
+
+.todo-container{
+    @apply max-w-[680px] w-[90vw] sm:w-[480px] lg:w-[540px] xl:w-[680px] border shadow-lg rounded-sm p-5 flex flex-col gap-5 my-10
 }
 
 .flex-between{
