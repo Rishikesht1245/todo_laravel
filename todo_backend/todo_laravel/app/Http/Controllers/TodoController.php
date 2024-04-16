@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 
 class TodoController extends Controller
@@ -37,8 +38,7 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         try{
-
-            if(!Auth::id()){
+            if(!$request->user_id){
                 return response()->json(["message"=> "User is not authenticated"], 401);
             }
             // validating data 

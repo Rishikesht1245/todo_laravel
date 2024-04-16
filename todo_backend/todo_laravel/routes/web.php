@@ -13,30 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('/api')->group(function () {
-    // Welcome message route
-    Route::get('/test', function () {
-        return response()->json(['message' => 'Welcome to Todo Application'], 200);
-    });
 
-    // Authentication routes
-    Route::namespace('Auth')->group(function () {
-        Route::get('/csrf-token', 'CsrfController@sendToken')->name('getToken');
-        Route::post('/register', 'RegisterController@create')->name('register');
-        Route::post('/login', 'LoginController@authenticate')->name('login');
-    });
-
-    // Todo CRUD operations
-    Route::prefix('/todo')->group(function () {
-        Route::get('/all/{id}', 'TodoController@index');
-        Route::get('/completed', 'TodoController@completedTodos');
-        Route::post('/create', 'TodoController@store');
-        Route::get('/{id}', 'TodoController@show');
-        Route::put('/{id}', 'TodoController@update');
-        Route::patch('/{id}', 'TodoController@changeStatus');
-        Route::delete('/{id}', 'TodoController@destroy');
-    });
-});
 
 // Home route
 Route::get('/home', 'HomeController@index')->name('home');

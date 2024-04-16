@@ -1,11 +1,14 @@
 <?php
- 
+
 namespace App\Http\Controllers\Auth;
- 
+
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
- 
+use Illuminate\Support\Facades\Session;
+
+
 class LoginController extends Controller
 {
     /**
@@ -19,12 +22,13 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-
- 
         if (Auth::attempt($credentials)) {
+
+            // echo $user_id;
             // Authentication passed...
             return response()->json(['message' => "Login Successful!", "user" => Auth::user()], 200);
+
         }
-        return response()->json(["message" => "Invalid Credentials"],401);
+        return response()->json(["message" => "Invalid Credentials"], 401);
     }
 }
