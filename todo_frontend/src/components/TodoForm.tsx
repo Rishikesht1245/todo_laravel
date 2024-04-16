@@ -23,7 +23,7 @@ const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
             try {
                 const response = await createTodoAPI(values);
                 toast.success(response?.data?.message);
-                dispatch(fetchTodosByUserID(userId))
+                dispatch(fetchTodosByUserID(userId));
                 setModalOpen(false);
                 
             } catch (error) {
@@ -35,6 +35,7 @@ const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
             try {
                 const response = await updateTodoAPI(values, data?.id!);
                 toast.success(response?.data?.message);
+                dispatch(fetchTodosByUserID(userId));
                 setModalOpen(false);
             } catch (error) {
                 console.log("Error in todo creatigon", error);
@@ -46,7 +47,7 @@ const TodoForm = ({type, data, setModalOpen}: TodoFormProps) => {
   const formik = useFormik({
     initialValues: {
      user_id : userId,
-     todo : ""
+     todo : data?.todo || "",
     },
     validationSchema: todoSchema,
     onSubmit: (values) => {

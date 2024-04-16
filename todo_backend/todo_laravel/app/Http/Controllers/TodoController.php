@@ -19,7 +19,7 @@ class TodoController extends Controller
     {
         try{
 
-            $todos = Todo::orderBy("created_at", "desc")->where("user_id", $userId)->get();
+            $todos = Todo::orderBy("created_at", "desc")->where("user_id", $userId)->where("is_finished", false)->get();
             if($todos->isEmpty()){
                 return response()->json(["message"=>"No todo found", "todos"=> []], 404);
             }
@@ -104,7 +104,7 @@ class TodoController extends Controller
                 return response()->json(["message"=> "No todo found!"], 404);
             }
     
-            if($todo->user_id != Auth::id()){
+            if($todo->user_id != $request->user_id){
                 return response()->json(["message" => "Unauthorized to update the todo"], 401);
             }
     
@@ -125,13 +125,17 @@ class TodoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function changeStatus($id){
+     public function changeStatus(Request $request, $id){
         try{
 
             $todo = Todo::find($id);
     
             if(!$todo){
                 return response()->json(["message"=> "Todo not found"], 404);
+            }
+
+            if($todo->user_id != $request->user_id){
+                return response()->json(["message" => "Unauthorized to change the status of todo"]);
             }
     
             $todo->is_finished = !$todo->is_finished;

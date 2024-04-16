@@ -11,22 +11,23 @@ import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
 import TodoForm from "../components/TodoForm";
 import { ITodo } from "../interfaces/todo";
+import { CompleteAPI } from "../apiRoutes/api";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [formType, setFormType] = useState<"edit" | "add">("add");
-  const [formData, setFromData] = useState<ITodo | null>(null)
+  const [formData, setFromData] = useState<ITodo | null>(null);
   const { data, isLoading } = useAppSelector((state) => state.todo);
   const dispatch = useAppDispatch();
   const userId =
     useAppSelector((state) => state?.auth?.user?.id) || getUserID();
 
-
   useEffect(() => {
     dispatch(fetchTodosByUserID(userId));
   }, [dispatch, userId]);
 
-  const handleEdit = (todo:ITodo) => {
+  const handleEdit = (todo: ITodo) => {
     setModalOpen(true);
     setFormType("edit");
     setFromData(todo);
@@ -36,6 +37,17 @@ const HomePage = () => {
     setModalOpen(true);
     setFormType("add");
     console.log("Clicked +");
+  };
+
+  const handleComplete = async (id: number) => {
+    try {
+      const response = await CompleteAPI(id, userId);
+      toast.success(response?.data?.message);
+      dispatch(fetchTodosByUserID(userId));
+    } catch (error) {
+      console.log("Error in marking the status to completed", error);
+      toast.error("Something went wrong!");
+    }
   };
 
   return (
@@ -50,7 +62,7 @@ const HomePage = () => {
               className="w-11 px-4 py-3 bg-[#3ecd64] flex items-center justify-center rounded-lg"
               title="Completed todos"
             >
-              <FaCheck className="text-white" size={18}/>
+              <FaCheck className="text-white" size={18} />
             </Link>
             <Button
               title="Create Todo"
@@ -68,6 +80,7 @@ const HomePage = () => {
                 key={todo?.id}
                 index={index}
                 handleEdit={handleEdit}
+                handleComplete={handleComplete}
               />
             ))
           ) : (
@@ -80,7 +93,11 @@ const HomePage = () => {
             heading={formType == "edit" ? "Edit Todo" : "Create Todo"}
             closeHandler={setModalOpen}
           >
-            <TodoForm type={formType} data={formData} setModalOpen={setModalOpen}/>
+            <TodoForm
+              type={formType}
+              data={formData}
+              setModalOpen={setModalOpen}
+            />
           </Modal>
         </div>
       )}
