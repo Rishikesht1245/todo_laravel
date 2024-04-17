@@ -171,7 +171,7 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($user_id, $id)
     {
         try{
 
@@ -180,7 +180,7 @@ class TodoController extends Controller
                 return response()->json(["message"=> "Todo not found"], 404);
             }
     
-            if(Auth::id() != $todo->user_id){
+            if($user_id != $todo->user_id){
                 return response()->json(["message" => "Unauthorized to delete the todo"], 401);
             }
     

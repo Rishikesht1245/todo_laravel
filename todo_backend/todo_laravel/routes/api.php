@@ -40,5 +40,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::get('/{id}', 'TodoController@show');
         Route::put('/{id}', 'TodoController@update');
         Route::patch('/{id}', 'TodoController@changeStatus');
-        Route::delete('/{id}', 'TodoController@destroy');
+        Route::delete('/{user_id}/{id}', 'TodoController@destroy');
     });

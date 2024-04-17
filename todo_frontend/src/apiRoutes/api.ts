@@ -27,3 +27,7 @@ export const CompleteAPI = async(id:number, user_id : string) => {
 export const fetchCompletedTodosAPI = async(userID:string) => {
     return await TodoAPI.get(`/completed/${userID}`)
 }
+
+export const deleteTodoAPI = async(id : number, user_id:string) => {
+    return await TodoAPI.delete(`/${user_id}/${id}`);
+}

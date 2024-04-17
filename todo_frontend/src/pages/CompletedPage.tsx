@@ -6,7 +6,7 @@ import TodoCard from "../components/TodoCard";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { ITodo } from "../interfaces/todo";
-import { CompleteAPI, fetchCompletedTodosAPI } from "../apiRoutes/api";
+import { CompleteAPI, deleteTodoAPI, fetchCompletedTodosAPI } from "../apiRoutes/api";
 import toast from "react-hot-toast";
 
 const CompletedPage = () => {
@@ -47,6 +47,19 @@ const CompletedPage = () => {
     }
   };
 
+  const handleDelete = async(id : number) => {
+    try {
+      const response = await deleteTodoAPI(id, userId);
+      if(response?.data?.message){
+        toast.success(response?.data?.message);
+        fetchCompletedTodos();
+      }
+    } catch (error) {
+      console.log("Error in deleting the todo: ", error);
+      toast.error("Something went wrong!");
+    }
+  }
+
   return (
     <>
       {isLoading ? (
@@ -71,6 +84,7 @@ const CompletedPage = () => {
                 index={index}
                 handleComplete={handleChangeStatus}
                 type="completed"
+                handleDelete={handleDelete}
               />
             ))
           ) : (

@@ -3,8 +3,16 @@ import { ITodo } from "../interfaces/todo.ts";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { MdOutlinePendingActions } from "react-icons/md";
+import ShowConfirm from "../components/ShowConfirm";
 
-const TodoCard = ({ todo, index, handleEdit, handleComplete, type }: TodoProps) => {
+const TodoCard = ({
+  todo,
+  index,
+  handleEdit,
+  handleComplete,
+  type,
+  handleDelete,
+}: TodoProps) => {
   return (
     <div className="flex flex-col gap-3 border p-4 rounded-sm">
       {/* todo  */}
@@ -24,26 +32,31 @@ const TodoCard = ({ todo, index, handleEdit, handleComplete, type }: TodoProps) 
             </>
           )}
           {type == "pending" && handleComplete ? (
-             <FaCheck
-             className="text-[#2c6b3c] cursor-pointer"
-             size={20}
-             onClick={() => handleComplete(todo?.id)}
-             title="Mark as complete"
-           />
-          ): (
+            <FaCheck
+              className="text-[#2c6b3c] cursor-pointer"
+              size={20}
+              onClick={() => handleComplete(todo?.id)}
+              title="Mark as complete"
+            />
+          ) : (
             <MdOutlinePendingActions
-             className="text-[#47c065] cursor-pointer"
-             size={20}
-             onClick={() => handleComplete(todo?.id)}
-             title="Mark as pending"
-           />
+              className="text-[#47c065] cursor-pointer"
+              size={20}
+              onClick={() => handleComplete(todo?.id)}
+              title="Mark as pending"
+            />
           )}
-         
-          <MdDelete
-            className=" text-red-600 cursor-pointer"
-            size={24}
-            title="Delete todo"
-          />
+          <ShowConfirm
+            message="Are you sure to delete the todo?"
+            handleFunction={handleDelete}
+            params={todo?.id}
+          >
+            <MdDelete
+              className=" text-red-600 cursor-pointer"
+              size={24}
+              title="Delete todo"
+            />
+          </ShowConfirm>
         </div>
       </div>
       {/* date */}
@@ -57,6 +70,7 @@ interface TodoProps {
   type: "completed" | "pending";
   handleEdit?: (todo: ITodo) => void;
   handleComplete: (id: number) => void;
+  handleDelete: (id: number) => void;
 }
 
 export default TodoCard;

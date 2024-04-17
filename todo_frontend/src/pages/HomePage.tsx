@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
 import TodoForm from "../components/TodoForm";
 import { ITodo } from "../interfaces/todo";
-import { CompleteAPI } from "../apiRoutes/api";
+import { CompleteAPI, deleteTodoAPI } from "../apiRoutes/api";
 import toast from "react-hot-toast";
 
 const HomePage = () => {
@@ -50,6 +50,19 @@ const HomePage = () => {
     }
   };
 
+  const handleDelete = async(id : number) => {
+    try {
+      const response = await deleteTodoAPI(id, userId);
+      if(response?.data?.message){
+        toast.success(response?.data?.message);
+        dispatch(fetchTodosByUserID(userId));
+      }
+    } catch (error) {
+      console.log("Error in deleting the todo: ", error);
+      toast.error("Something went wrong!");
+    }
+  }
+
   return (
     <>
       {isLoading ? (
@@ -83,6 +96,7 @@ const HomePage = () => {
                 handleEdit={handleEdit}
                 handleComplete={handleComplete}
                 type="pending"
+                handleDelete={handleDelete}
               />
             ))
           ) : (
