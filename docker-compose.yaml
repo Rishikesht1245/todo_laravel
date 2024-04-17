@@ -1,0 +1,108 @@
+version: "3.7"
+services:
+  app:
+    ports:
+      - 8000:8000
+    build:
+      args:
+        user: rishikesh
+        uid: 1000
+      context: ./todo_backend
+      dockerfile: Dockerfile
+    working_dir: /var/www/
+    environment:
+      - COMPOSER_MEMORY_LIMIT=-1
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www
+    networks:
+      - lahmi
+  
+# Web service 
+  # define the frontend service
+  # we can use any name for the service. A standard naming convention is to use "web" for the frontend
+  web:
+    # we use depends_on to specify that service depends on another service
+    # in this case, we specify that the web depends on the api service
+    # this means that the api service will be started before the web service
+    depends_on:
+      - app
+    # specify the build context for the web service
+    # this is the directory where the Dockerfile for the web service is located
+    build: ./todo_frontend
+    # specify the ports to expose for the web service
+    # the first number is the port on the host machine
+    # the second number is the port inside the container
+    ports:
+      - 5173:5173
+    # specify the environment variables for the web service
+    # these environment variables will be available inside the container
+    environment:
+      VITE_API_URL: http://localhost:8000
+
+    # this is for docker compose watch mode
+    # anything mentioned under develop will be watched for changes by docker compose watch and it will perform the action mentioned
+    develop:
+      # we specify the files to watch for changes
+      watch:
+        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+        # it'll watch for changes in the frontend directory and sync the changes with the container real time
+        - path: ./frontend
+          target: /app
+          action: sync
+# Creating database and user
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: laravel_db
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_PASSWORD: root
+      MYSQL_USER: user
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./docker-compose/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - 3307:3306
+    networks:
+      - lahmi
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    networks:
+      - lahmi
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 8005:80
+    depends_on:
+      - db
+      - app
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - lahmi
+
+networks:
+  lahmi:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
