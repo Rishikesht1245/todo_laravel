@@ -23,3 +23,7 @@ export const updateTodoAPI = async(formData:{todo:string, user_id:string}, id : 
 export const CompleteAPI = async(id:number, user_id : string) => {
     return await TodoAPI.patch(`/${id}`,{user_id} );
 }
+
+export const fetchCompletedTodosAPI = async(userID:string) => {
+    return await TodoAPI.get(`/completed/${userID}`)
+}

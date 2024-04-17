@@ -35,7 +35,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     // Todo CRUD operations
     Route::prefix('/todo')->group(function () {
         Route::get('/all/{id}', 'TodoController@index');
-        Route::get('/completed', 'TodoController@completedTodos');
+        Route::get('/completed/{user_id}', 'TodoController@completedTodos');
         Route::post('/create', 'TodoController@store');
         Route::get('/{id}', 'TodoController@show');
         Route::put('/{id}', 'TodoController@update');

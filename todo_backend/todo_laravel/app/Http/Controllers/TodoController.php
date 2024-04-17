@@ -155,10 +155,10 @@ class TodoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function completedTodos(){
+     public function completedTodos($user_id){
         try{
 
-            $completedTodos = Todo::orderBy("created_at", "desc")->where("user_id", Auth::id())->where("is_finished", true)->get();
+            $completedTodos = Todo::orderBy("created_at", "desc")->where("user_id", $user_id)->where("is_finished", true)->get();
             return response()->json(["message" => "Completed todos fetched!", "todos" => $completedTodos],200);
         }catch (\Exception $e) {
             return response()->json(["message" => "An error occurred while fetching completed todos", "error" => $e->getMessage()], 500);

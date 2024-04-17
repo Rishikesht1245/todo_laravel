@@ -56,6 +56,7 @@ const HomePage = () => {
         <Loader />
       ) : (
         <div className="todo-container">
+          <h4 className="text-indigo uppercase text-center my-3 font-bold">Pending Todos</h4>
           <div className="flex flex-center gap-5 ml-auto">
             <Link
               to={"/completed"}
@@ -67,7 +68,7 @@ const HomePage = () => {
             <Button
               title="Create Todo"
               type="button"
-              className="bg-[#0f1c31] w-11 flex items-center justify-center rounded-lg"
+              className="bg-[#0f1c31] w-11 px-4 py-3 flex items-center justify-center rounded-lg"
               onClick={handleAdd}
             >
               <FaPlus size={18} />
@@ -81,6 +82,7 @@ const HomePage = () => {
                 index={index}
                 handleEdit={handleEdit}
                 handleComplete={handleComplete}
+                type="pending"
               />
             ))
           ) : (
