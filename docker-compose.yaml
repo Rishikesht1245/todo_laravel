@@ -9,7 +9,8 @@ services:
         uid: 1000
       context: ./todo_backend
       dockerfile: Dockerfile
-    working_dir: /var/www/
+    working_dir: /var/www/todo_backend/todo_laravel
+    command: ["php", "artisan" , "serve", "--host" , "0.0.0.0"]
     environment:
       - COMPOSER_MEMORY_LIMIT=-1
     depends_on:
@@ -35,7 +36,7 @@ services:
     # the first number is the port on the host machine
     # the second number is the port inside the container
     ports:
-      - 5173:5173
+      - 5173:3000
     # specify the environment variables for the web service
     # these environment variables will be available inside the container
     environment:
@@ -47,12 +48,12 @@ services:
       # we specify the files to watch for changes
       watch:
         # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
-        - path: ./frontend/package.json
+        - path: ./frontodo_frontendtend/package.json
           action: rebuild
-        - path: ./frontend/package-lock.json
+        - path: ./todo_frontend/package-lock.json
           action: rebuild
         # it'll watch for changes in the frontend directory and sync the changes with the container real time
-        - path: ./frontend
+        - path: ./todo_frontend
           target: /app
           action: sync
 # Creating database and user
