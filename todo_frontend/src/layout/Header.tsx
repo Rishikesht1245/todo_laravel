@@ -1,4 +1,3 @@
-import React from 'react'
 import { todoLogo } from '../assets/image'
 import { useAppDispatch, useAppSelector } from '../App'
 import { Link } from 'react-router-dom';
